@@ -1,5 +1,4 @@
-# Simple producer and consumer
-# Demonstrates queue and event with locks
+
 
 # Imports
 import random
