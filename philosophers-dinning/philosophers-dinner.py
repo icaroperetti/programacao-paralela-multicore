@@ -74,7 +74,7 @@ class Philosofer(Thread):
                 return True
             # If the second fork is being used, release the first fork
             else:
-                # print(f"{name} couldn't get another fork")
+                # print(f"{name} couldn't get another chopstick")
                 first_fork.release()
                 return False
 
@@ -83,6 +83,7 @@ names = ['Aristoteles', 'Platão', 'Kant', 'Descartes', 'Sócrates']
 forks = [Lock() for _ in range(5)]
 table = [Philosofer(names[i], forks[i], forks[(i+1) % 5]) for i in range(5)]
 
+# Starting the threads
 for filosofo in table:
     filosofo.start()
     time.sleep(0.8)
