@@ -16,12 +16,12 @@ class Philosofer(Thread):
         self.name = name
         self.time_eating = random.randint(1, 5)  # Time eating
         self.time_without_eating = random.uniform(
-            25, 50)  # Time max without eating
+            15, 20)  # Time max without eating
 
     def run(self):
         while self.running:
             time_waiting = 0
-            random_time = random.uniform(5, 15)
+            random_time = random.randint(5, 15)
 
             print(Fore.BLUE + f"{self.name} is thinking")
             time.sleep(random_time)
@@ -37,7 +37,7 @@ class Philosofer(Thread):
 
             # Starvation resolution
             # Check if the philosopher has been waiting for more than the time he can wait, if so, he eats
-            if (time_waiting + 3.5) > self.time_without_eating:
+            if (time_waiting + 5) > self.time_without_eating:
                 # self.running = False
                 # print(f"{self.name} died of hunger")
                 self.left_fork.acquire(True)
@@ -55,17 +55,19 @@ class Philosofer(Thread):
 
         print(Fore.YELLOW + f"{name} waiting")
         if first_fork.acquire(False):  # Check if the first fork is not being used
-            # print(f"{name} got a chopstick")
+            print(Fore.WHITE + f"{name} got a chopstick")
 
             # Check if the second fork is not being used
             if second_fork.acquire(False):
-                # print(f"{name} got another chopstick")
+                print(Fore.WHITE + f"{name} got another chopstick")
 
                 print(Fore.RED + f"{name} is eating\n")
                 time.sleep(self.time_eating)
                 meals_eated[names.index(self.name)] += 1
-                print(Fore.GREEN + "Each Philosopher has eaten ", meals_eated)
                 print(Fore.BLACK + f"{name} finished eating\n")
+
+                print(Fore.GREEN +
+                      f"Each Philosopher has eaten {meals_eated}", )
 
                 first_fork.release()
                 second_fork.release()
