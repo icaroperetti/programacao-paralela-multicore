@@ -1,5 +1,6 @@
 import random
 import time
+from colorama import Fore
 from threading import Thread, Lock
 
 
@@ -10,7 +11,6 @@ class Philosofer(Thread):
         Thread.__init__(self)
         self.left_fork = left_fork
         self.right_fork = right_fork
-        self.empty_plates = 0  # Number of plates that the philosopher has eaten
         self.name = name
         self.time_eating = random.randint(1, 5)  # Time eating
         self.time_without_eating = random.uniform(
@@ -21,7 +21,7 @@ class Philosofer(Thread):
             time_waiting = 0
             random_time = random.uniform(5, 15)
 
-            print(f"{self.name} is thinking")
+            print(Fore.BLUE + f"{self.name} is thinking")
             time.sleep(random_time)
 
             eated = self.eat()
@@ -40,12 +40,11 @@ class Philosofer(Thread):
                 # print(f"{self.name} died of hunger")
                 self.left_fork.acquire(True)
                 self.right_fork.acquire(True)
-                print(f"{self.name} started eating (STARVATION)")
+                print(Fore.GREEN + f"{self.name} started eating (STARVATION)")
                 time.sleep(self.time_eating)
-                self.empty_plates += 1
-                print(f"{self.name} finished eating")
 
-                # print(f"Empty plates: {self.empty_plates} (STARVATION)")
+                print(Fore.RED + f"{self.name} finished eating")
+
                 self.left_fork.release()
                 self.right_fork.release()
 
@@ -53,25 +52,23 @@ class Philosofer(Thread):
         first_fork, second_fork, name = self.left_fork, self.right_fork, self.name
         print(f"{name} is hungry and tried to get a chopstick")
         if first_fork.acquire(False):  # Check if the first fork is not being used
-            print(f"{name} got a chopstick")
+            # print(f"{name} got a chopstick")
 
             # Check if the second fork is not being used
             if second_fork.acquire(False):
-                print(f"{name} got another chopstick")
+                # print(f"{name} got another chopstick")
 
                 print(f"{name} is eating\n")
                 time.sleep(self.time_eating)
-                self.empty_plates += 1
-                print(f"{name} finished eating\n")
+                print(Fore.BLACK + f"{name} finished eating\n")
 
                 first_fork.release()
                 second_fork.release()
 
-                print(f"Empty plates: {self.empty_plates}")
                 return True
             # If the second fork is being used, release the first fork
             else:
-                print(f"{name} couldn't get another chopstick")
+                # print(f"{name} couldn't get another chopstick")
                 first_fork.release()
                 return False
 
