@@ -12,7 +12,7 @@ class Philosofer(Thread):
         self.right_fork = right_fork
         self.empty_plates = 0  # Number of plates that the philosopher has eaten
         self.name = name
-        self.time_eating = random.randint(5, 15)  # Time eating
+        self.time_eating = random.uniform(1, 5)   # Time eating
         self.time_without_eating = random.uniform(
             7, 12)  # Time max without eating
 
