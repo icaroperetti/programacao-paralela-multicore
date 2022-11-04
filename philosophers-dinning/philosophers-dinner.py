@@ -3,6 +3,8 @@ import time
 from colorama import Fore
 from threading import Thread, Lock
 
+meals_eated = [0, 0, 0, 0, 0]
+
 
 class Philosofer(Thread):
     running = True
@@ -14,7 +16,7 @@ class Philosofer(Thread):
         self.name = name
         self.time_eating = random.randint(1, 5)  # Time eating
         self.time_without_eating = random.uniform(
-            7, 12)  # Time max without eating
+            25, 50)  # Time max without eating
 
     def run(self):
         while self.running:
@@ -35,7 +37,7 @@ class Philosofer(Thread):
 
             # Starvation resolution
             # Check if the philosopher has been waiting for more than the time he can wait, if so, he eats
-            if (time_waiting + 2.5) > self.time_without_eating:
+            if (time_waiting + 3.5) > self.time_without_eating:
                 # self.running = False
                 # print(f"{self.name} died of hunger")
                 self.left_fork.acquire(True)
@@ -47,7 +49,6 @@ class Philosofer(Thread):
 
                 self.left_fork.release()
                 self.right_fork.release()
-                time.sleep(random_time)
 
     def eat(self):
         first_fork, second_fork, name = self.left_fork, self.right_fork, self.name
@@ -62,6 +63,8 @@ class Philosofer(Thread):
 
                 print(Fore.RED + f"{name} is eating\n")
                 time.sleep(self.time_eating)
+                meals_eated[names.index(self.name)] += 1
+                print(Fore.GREEN + "Each Philosopher has eaten ", meals_eated)
                 print(Fore.BLACK + f"{name} finished eating\n")
 
                 first_fork.release()
