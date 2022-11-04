@@ -74,7 +74,7 @@ class Philosofer(Thread):
                 return True
             # If the second fork is being used, release the first fork
             else:
-                # print(f"{name} couldn't get another chopstick")
+                # print(f"{name} couldn't get another fork")
                 first_fork.release()
                 return False
 
