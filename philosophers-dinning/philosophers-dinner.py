@@ -1,7 +1,7 @@
 import random
 import time
-from colorama import Fore
 from threading import Thread, Lock
+from colorama import Fore
 
 meals_eated = [0, 0, 0, 0, 0]
 
@@ -32,12 +32,11 @@ class Philosofer(Thread):
             if eated == True:
                 time_waiting = 0
             else:
-                # If the philosopher didn't eat, add the time he was thinking to the time he is waiting
                 time_waiting += random_time
 
-            # Starvation resolution
+            # Starvation
             # Check if the philosopher has been waiting for more than the time he can wait, if so, he eats
-            if (time_waiting + 5) > self.time_without_eating:
+            if (time_waiting + 4) > self.time_without_eating:
                 # self.running = False
                 # print(f"{self.name} died of hunger")
                 self.left_fork.acquire(True)
@@ -45,21 +44,21 @@ class Philosofer(Thread):
                 print(Fore.GREEN + f"{self.name} started eating (STARVATION)")
                 time.sleep(self.time_eating)
 
-                print(Fore.RED + f"{self.name} finished eating")
-
+                print(Fore.GREEN + f"{self.name} finished eating")
+                # Release the forks so the other philosophers can eat
                 self.left_fork.release()
                 self.right_fork.release()
 
     def eat(self):
         first_fork, second_fork, name = self.left_fork, self.right_fork, self.name
+        print(Fore.YELLOW + f"{name} trying to get a fork")
 
-        print(Fore.YELLOW + f"{name} waiting")
         if first_fork.acquire(False):  # Check if the first fork is not being used
-            print(Fore.WHITE + f"{name} got a chopstick")
+            print(Fore.WHITE + f"{name} got the first fork")
 
             # Check if the second fork is not being used
             if second_fork.acquire(False):
-                print(Fore.WHITE + f"{name} got another chopstick")
+                print(Fore.WHITE + f"{name} got the second fork")
 
                 print(Fore.RED + f"{name} is eating\n")
                 time.sleep(self.time_eating)
@@ -67,7 +66,7 @@ class Philosofer(Thread):
                 print(Fore.BLACK + f"{name} finished eating\n")
 
                 print(Fore.GREEN +
-                      f"Each Philosopher has eaten {meals_eated}", )
+                      f"Each Philosopher has eaten: {meals_eated}", )
 
                 first_fork.release()
                 second_fork.release()
@@ -82,9 +81,8 @@ class Philosofer(Thread):
 
 names = ['Aristoteles', 'Platão', 'Kant', 'Descartes', 'Sócrates']
 forks = [Lock() for _ in range(5)]
-
 table = [Philosofer(names[i], forks[i], forks[(i+1) % 5]) for i in range(5)]
 
 for filosofo in table:
     filosofo.start()
-    time.sleep(1)
+    time.sleep(0.8)
