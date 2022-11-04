@@ -47,10 +47,12 @@ class Philosofer(Thread):
 
                 self.left_fork.release()
                 self.right_fork.release()
+                time.sleep(random_time)
 
     def eat(self):
         first_fork, second_fork, name = self.left_fork, self.right_fork, self.name
-        print(f"{name} is hungry and tried to get a chopstick")
+
+        print(Fore.YELLOW + f"{name} waiting")
         if first_fork.acquire(False):  # Check if the first fork is not being used
             # print(f"{name} got a chopstick")
 
@@ -58,7 +60,7 @@ class Philosofer(Thread):
             if second_fork.acquire(False):
                 # print(f"{name} got another chopstick")
 
-                print(f"{name} is eating\n")
+                print(Fore.RED + f"{name} is eating\n")
                 time.sleep(self.time_eating)
                 print(Fore.BLACK + f"{name} finished eating\n")
 
